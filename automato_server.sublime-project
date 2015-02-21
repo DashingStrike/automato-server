@@ -1,0 +1,15 @@
+//json5
+{
+	"folders":
+	[
+		{
+			"follow_symlinks": true,
+			"path": ".",
+			"folder_exclude_patterns": ["node_modules", "obj"],
+		},
+		{
+			"follow_symlinks": true,
+			"path": "F:\\SRCSVN\\Projects\\Automato"
+		}
+	]
+}
