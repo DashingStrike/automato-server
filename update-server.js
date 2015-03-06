@@ -194,7 +194,7 @@ var _port = 4003;
 var _work_dir = path.join(__dirname, 'games');
 var _out_dir = '/var/data/smb_web/dashingstrike.com/Automato/games';
 var _password = require('./secrets.json').password;
-var _project_names = ['AtomZombieSmasher', 'common', 'Diablo3'];
+var _project_names = ['AtomZombieSmasher', 'common', 'Diablo3', 'Examples', 'FFXIV', 'ROTMG'];
 
 if (!fs.existsSync(_work_dir)) {
   fs.mkdirSync(_work_dir);

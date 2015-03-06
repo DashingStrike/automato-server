@@ -30,7 +30,7 @@ function getManifest(base_dir, next, base_mode) {
             doit(fn, done);
           } else if (stat.isFile()) {
             var ext = path.extname(fn).toLowerCase();
-            if (ext === '.png' || ext === '.wav' || path.basename(path.dirname(fn)) === 'scripts' || base_mode) {
+            if (ext === '.png' || ext === '.wav' || path.basename(path.dirname(fn)) === 'scripts' || base_mode && path.basename(fn) !== 'manifest.txt') {
               ++left;
               fs.readFile(fn, function(err, data) {
                 var crc = crc32.crc32(data);
