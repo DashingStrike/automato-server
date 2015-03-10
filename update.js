@@ -30,7 +30,11 @@ function getManifest(base_dir, next, base_mode) {
             doit(fn, done);
           } else if (stat.isFile()) {
             var ext = path.extname(fn).toLowerCase();
-            if (ext === '.png' || ext === '.wav' || path.basename(path.dirname(fn)) === 'scripts' || base_mode && path.basename(fn) !== 'manifest.txt') {
+            if (ext === '.png' || ext === '.wav' || path.basename(path.dirname(fn)) === 'scripts' ||
+              base_mode && path.basename(fn) !== 'manifest.txt' ||
+              path.basename(path.dirname(fn)) === 'data' && path.basename(fn) === 'charTemplate.txt' ||
+              path.basename(path.dirname(fn)) === 'ATITD' && ext === '.txt' // carrot_config.txt, ThistleReference.txt
+            ) {
               ++left;
               fs.readFile(fn, function(err, data) {
                 var crc = crc32.crc32(data);
