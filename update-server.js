@@ -192,7 +192,7 @@ function doUpdate(project, res, next) {
 //////////////////////////////////////////////////////////////////////////
 var _port = 4003;
 var _work_dir = path.join(__dirname, 'games');
-var _out_dir = '/var/data/smb_web/dashingstrike.com/Automato/games';
+var _out_dir = '/var/data/web/dashingstrike.com/Automato/games';
 var _password = require('./secrets.json').password;
 var _project_names = ['ATITD', 'AtomZombieSmasher', 'common', 'Diablo3', 'Examples', 'FFXIV', 'ROTMG'];
 
