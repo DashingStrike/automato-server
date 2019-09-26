@@ -1,45 +1,54 @@
-var assert = require('assert');
-var fs = require('fs');
-var path = require('path');
-var crc32 = require('./crc32.js');
+const fs = require('fs');
+const path = require('path');
+const crc32 = require('./crc32.js');
 
 function getManifest(base_dir, next, base_mode) {
-  var manifest = [];
+  let manifest = [];
   function doit(dir, next) {
-    var left = 1;
-    function done() {
+    let left = 1;
+    let any_err;
+    function done(err) {
+      if (err) {
+        any_err = err;
+      }
       --left;
       if (left === 0) {
-        next();
+        return next(any_err);
       }
     }
 
-    fs.readdir(dir, function(err, files) {
+    fs.readdir(dir, function (err, files) {
       if (err) {
-         console.warn(err);
+        console.warn(err);
       }
-      files.forEach(function(filename) {
+      files.forEach(function (filename) {
         if (filename[0] === '.') {
           return;
         }
-        var fn = dir + '/' + filename;
+        let fn = `${dir}/${filename}`;
         ++left;
-        fs.stat(fn, function(err, stat) {
+        fs.stat(fn, function (err, stat) {
+          if (err) {
+            return done(err);
+          }
           if (stat.isDirectory()) {
             ++left;
             doit(fn, done);
           } else if (stat.isFile()) {
-            var ext = path.extname(fn).toLowerCase();
+            let ext = path.extname(fn).toLowerCase();
             if (ext === '.png' || ext === '.wav' || path.basename(path.dirname(fn)) === 'scripts' ||
               base_mode && path.basename(fn) !== 'manifest.txt' ||
               path.basename(path.dirname(fn)) === 'data' && path.basename(fn) === 'charTemplate.txt' ||
               path.basename(path.dirname(fn)) === 'ATITD' && ext === '.txt' // carrot_config.txt, ThistleReference.txt
             ) {
               ++left;
-              fs.readFile(fn, function(err, data) {
-                var crc = crc32.crc32(data);
+              fs.readFile(fn, function (err, data) {
+                if (err) {
+                  return done(err);
+                }
+                let crc = crc32.crc32(data);
                 fn = path.relative(base_dir, fn);
-                manifest.push({ fn: fn, crc: crc, mt: (+stat.mtime / 1000), size: stat.size });
+                manifest.push({ fn: fn, crc: crc, mt: (Number(stat.mtime) / 1000), size: stat.size });
                 done();
               });
             } else {
@@ -52,11 +61,11 @@ function getManifest(base_dir, next, base_mode) {
       done();
     });
   }
-  doit(base_dir, function() {
-    var ii;
-    var data = [];
+  doit(base_dir, function () {
+    let ii;
+    let data = [];
     data.push('Version 1');
-    manifest.sort(function(a, b) {
+    manifest.sort(function (a, b) {
       if (a.fn.toLowerCase() < b.fn.toLowerCase()) {
         return -1;
       } else if (a.fn.toLowerCase() > b.fn.toLowerCase()) {
@@ -65,12 +74,12 @@ function getManifest(base_dir, next, base_mode) {
       return 0;
     });
     for (ii = 0; ii < manifest.length; ++ii) {
-      var m = manifest[ii];
+      let m = manifest[ii];
       data.push('ManifestFileEntry');
-      data.push('    filename "' + m.fn + '"');
-      data.push('    crc ' + m.crc);
+      data.push(`    filename "${m.fn}"`);
+      data.push(`    crc ${m.crc}`);
       //data.push('    time ' + m.mt);
-      data.push('    size ' + m.size);
+      data.push(`    size ${m.size}`);
       data.push('End');
     }
     next(data.join('\n'));
