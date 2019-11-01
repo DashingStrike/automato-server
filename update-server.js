@@ -98,7 +98,7 @@ function copyModdedFiles(src, dst, final_next) {
         return done(err);
       }
       files.forEach(function (filename) {
-        if (filename[0] === '.') {
+        if (filename[0] === '.' && filename !== '.luacheckrc') {
           return;
         }
         let fn_in = `${dir_in}/${filename}`;
