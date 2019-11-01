@@ -22,7 +22,7 @@ function getManifest(base_dir, next, base_mode) {
         console.warn(err);
       }
       files.forEach(function (filename) {
-        if (filename[0] === '.') {
+        if (filename[0] === '.' && filename !== '.luacheckrc') {
           return;
         }
         let fn = `${dir}/${filename}`;
