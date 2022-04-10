@@ -42,7 +42,7 @@ function updateGit(project, next) {
         }
         log('Performing initial clone...');
         return child_process.exec(
-          `git clone git://github.com/DashingStrike/Automato-${project.name}.git ${project.name}`,
+          `git clone https://github.com/DashingStrike/Automato-${project.name}.git ${project.name}`,
           { cwd: path.join(project.work_dir, '..') },
           function (error, stdout, stderr) {
             if (error) {
