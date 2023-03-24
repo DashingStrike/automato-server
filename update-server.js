@@ -34,6 +34,7 @@ function getGitVersion(project, next) {
 }
 
 function updateGit(project, next) {
+  let remote_url = `https://github.com/DashingStrike/Automato-${project.name}.git`;
   async.series([
     function mkdDirAndClone(next) {
       fs.exists(project.work_dir, function (exists) {
@@ -42,7 +43,7 @@ function updateGit(project, next) {
         }
         log('Performing initial clone...');
         return child_process.exec(
-          `git clone https://github.com/DashingStrike/Automato-${project.name}.git ${project.name}`,
+          `git clone ${remote_url} ${project.name}`,
           { cwd: path.join(project.work_dir, '..') },
           function (error, stdout, stderr) {
             if (error) {
@@ -57,6 +58,8 @@ function updateGit(project, next) {
     //dogit.bind(null, project, 'git config --unset core.autocrlf', true),
     //dogit.bind(null, project, 'git checkout .', false),
     dogit.bind(null, project, 'git config core.autocrlf false', true),
+    // Switch from old git:// to https:// URLs
+    dogit.bind(null, project, `git remote set-url origin ${remote_url}`, true),
     function (next) {
       dogit(project, 'git pull', false, function (err, stdout, stderr) {
         if (stdout) {
