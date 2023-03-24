@@ -82,6 +82,18 @@ function updateGit(project, next) {
   });
 }
 
+function mkdirForFile(filename, next) {
+  let dirname = path.dirname(filename);
+  fs.exists(dirname, function (exists) {
+    if (exists) {
+      return next();
+    }
+    mkdirForFile(dirname, function () {
+      fs.mkdir(dirname, next);
+    });
+  });
+}
+
 function copyModdedFiles(src, dst, final_next) {
   function doit(dir_in, dir_out, next) {
     let left = 1;
@@ -137,7 +149,7 @@ function copyModdedFiles(src, dst, final_next) {
                   } else {
                     return done();
                   }
-                  return fs.mkdir(path.dirname(fn_out), function () {
+                  return mkdirForFile(fn_out, function () {
                     fs.writeFile(fn_out, data_in, function (err) {
                       if (err) {
                         log(err);
