@@ -250,6 +250,7 @@ let _project_names = [
   'ATITD',
   'ATITD9',
   'ATITD10',
+  'ATITD11',
   'AtomZombieSmasher',
   'common',
   'Diablo3',
